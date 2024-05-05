@@ -2,12 +2,24 @@ const { Router } = require('express');
 const pool = require('../db')
 const router = Router();
 
+
+// Fetch all products
 router.get('/products', async (req, res) => {
-    const result = await pool.query('SELECT NOW()')
-    res.json(result.rows[0])
+    try {
+        const { category } = req.params;  // Extracting category from URL parameters
+        // SQL query to fetch products by category
+        const result = await pool.query('SELECT * FROM products');
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "Products not found." });
+        }
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server error" });
+    }
 })
 
-// Endpoint to fetch all products
+// Fetch products by category
 router.get('/products/:category', async (req, res) => {
     try {
         const { category } = req.params;  // Extracting category from URL parameters

@@ -67,6 +67,13 @@ CREATE TABLE cart_items (
     quantity INTEGER NOT NULL
 );
 
+-- Create Subscribers Table
+CREATE TABLE newsletter_subscribersrs (
+    SubscriberID SERIAL PRIMARY KEY,
+    Email VARCHAR(255) NOT NULL,
+    SubscribedAt TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 
 -- Insert into categories
 INSERT INTO categories (name, description) VALUES
