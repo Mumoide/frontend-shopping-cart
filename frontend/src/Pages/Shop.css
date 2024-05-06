@@ -1,0 +1,19 @@
+/* This CSS assumes the Navbar is part of the layout and not inside the Shop component */
+.shop-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Additional styles to ensure no extra padding or margins are interfering */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Make Hero grow to fill available space */
+.Hero {
+  overflow: auto; /* Allows scrolling within the Hero component if content exceeds its space */
+}

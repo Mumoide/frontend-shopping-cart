@@ -1,0 +1,40 @@
+.Footer {
+  background: #f0f0f0;
+  color: #333;
+  text-align: center;
+  padding: 20px 0;
+  box-shadow: 0 -2px 2px -1px rgba(0, 0, 0, 0.2);
+}
+
+.footer-content {
+  padding: 0 20px;
+}
+
+.footer-content p {
+  margin: 10px 0;
+}
+
+.social-media-links {
+  margin: 20px 0;
+}
+
+.social-media-links a {
+  margin: 0 10px;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.social-media-links a:hover {
+  color: #007bff;
+}
+
+.social-media-links i {
+  margin-right: 5px; /* Adds spacing between the icon and text */
+}
+
+.footer-bottom {
+  margin-top: 20px;
+  font-size: 0.8em;
+  color: #666;
+}

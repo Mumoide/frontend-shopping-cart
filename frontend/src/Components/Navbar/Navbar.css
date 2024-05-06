@@ -1,0 +1,97 @@
+.nav-logo img {
+  width: 100px; /* Adjust this value to fit your design */
+  height: auto; /* Keeps the aspect ratio of the image */
+}
+
+.nav-logo p {
+  color: #171717;
+  font-weight: 600;
+  font-size: 38px;
+  gap: 10px;
+  margin-right: 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  background-color: #f0f0f0; /* Matching background with Hero and Footer */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow for a cleaner look */
+  color: #333; /* Ensuring text color consistency */
+}
+
+.nav-logo,
+.nav-menu,
+.nav-login-cart {
+  display: flex;
+  align-items: center; /* Optional, based on your design */
+}
+
+.nav-menu {
+  list-style-type: none; /* Removes bullet points */
+  padding: 0; /* Removes default padding */
+  list-style: none;
+  gap: 20px;
+  color: #626262;
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+.nav-menu li {
+  margin-right: 20px; /* Spacing between menu items */
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  color: #626262;
+}
+
+.nav-menu Link {
+  cursor: pointer;
+}
+
+.nav-menu hr {
+  border: none;
+  width: 80%;
+  height: 3px;
+  border-radius: 10px;
+  background: #b37229;
+}
+
+.nav-login-cart {
+  display: flex;
+  align-items: center;
+  gap: 45px;
+}
+
+.nav-login-cart button {
+  width: 137px;
+  height: 48px;
+  outline: none;
+  border: 1px solid #7a7a7a;
+  border-radius: 75px;
+  color: #515151;
+  font-size: 15px;
+  font-weight: 600;
+  background: white;
+  cursor: pointer;
+}
+
+.nav-login-cart button:active {
+  background: #f3f3f3;
+}
+
+.nav-cart-count {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -35px;
+  margin-left: -55px;
+  border-radius: 11px;
+  font-size: 14px;
+  background-color: red;
+  color: white;
+}
