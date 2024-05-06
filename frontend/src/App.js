@@ -1,0 +1,40 @@
+import './App.css';
+import { Navbar } from './Components/Navbar/Navbar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Shop from './Pages/Shop';
+import ShopCategory from './Pages/ShopCategory';
+import Product from './Pages/Product';
+import Cart from './Pages/Cart';
+import LoginSignup from './Pages/LoginSignup';
+import { ActiveMenuProvider } from './Context/ActiveMenuContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+function App() {
+  return (
+    <div>
+      <BrowserRouter>
+        <ActiveMenuProvider>
+
+          <Navbar />
+          <Routes>
+            <Route path='/' element={<Shop />} />
+            <Route path='/manual_tools' element={<ShopCategory category="manual_tools" />} />
+            <Route path='/electric_tools' element={<ShopCategory category="electric_tools" />} />
+            <Route path='/construction_material' element={<ShopCategory category="construction_material" />} />
+            <Route path='/security' element={<ShopCategory category="security" />} />
+            <Route path='/various_accesories' element={<ShopCategory category="various_accesories" />} />
+            <Route path='product' element={<Product />}>
+              <Route path=':productId' element={<Product />}></Route>
+            </Route>
+            <Route path='/cart' element={<Cart />}></Route>
+            <Route path='/login' element={<LoginSignup />}></Route>
+          </Routes>
+        </ActiveMenuProvider>
+      </BrowserRouter>
+      <ToastContainer position="bottom-right" />
+    </div>
+  );
+}
+
+export default App;

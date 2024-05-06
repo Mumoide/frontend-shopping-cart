@@ -1,0 +1,42 @@
+.ShopCategory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px;
+  padding: 15px;
+  align-items: start;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.ShopCategory-item {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ShopCategory p {
+  margin: 6px 0;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .ShopCategory {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(250px, 1fr)
+    ); /* More responsive grid adjustments */
+    gap: 20px; /* Reduced gap for smaller screens */
+  }
+
+  .item {
+    padding: 10px; /* Reduced padding for smaller screens */
+  }
+
+  .item-price-new,
+  .item-price-old {
+    font-size: 14px; /* Smaller font size for smaller screens */
+  }
+}

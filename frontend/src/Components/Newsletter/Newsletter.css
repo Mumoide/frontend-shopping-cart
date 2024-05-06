@@ -1,0 +1,56 @@
+.newsletter {
+  text-align: center;
+  padding: 15px;
+  background: #f0f0f0; /* Matches Hero background */
+  /* border-radius: 8px; /* Consistent rounded corners */
+  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Similar shadow for depth */
+  width: 80%; /* Responsive width, adjust as needed */
+  max-width: 500px; /* Maximum width to maintain design integrity */
+  margin: auto; /* Centering in the available space */
+  margin-top: -30px;
+}
+
+.newsletter h2 {
+  color: #333;
+  font-size: 2.5em; /* Large and readable title */
+  margin-bottom: 10px; /* Space between title and content */
+}
+
+.newsletter p {
+  font-size: 16px;
+  color: #666; /* Subtle text color */
+  margin-bottom: 20px; /* Space before the input */
+}
+
+.newsletter-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px; /* Space below the form */
+}
+
+.newsletter-form input[type="email"] {
+  flex-grow: 1;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+.newsletter-form button {
+  padding: 10px 20px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  background-color: #004494;
+}
+
+.newsletter-message {
+  color: green;
+  font-size: 14px;
+}
