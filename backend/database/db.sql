@@ -68,6 +68,13 @@ CREATE TABLE cart_items (
 );
 
 
+-- Create Subscribers Table
+CREATE TABLE newsletter_subscribersrs (
+    SubscriberID SERIAL PRIMARY KEY,
+    Email VARCHAR(255) NOT NULL,
+    SubscribedAt TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Insert into categories
 INSERT INTO categories (name, description) VALUES
 ('Herramientas manuales', 'Herramientas de uso manual para todo tipo de trabajos.'),
