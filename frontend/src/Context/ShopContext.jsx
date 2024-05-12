@@ -12,7 +12,6 @@ const ShopContextProvider = (props) => {
         const response = await fetch(`http://localhost:3001/products/`);
         const data = await response.json();
         setProducts(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -70,9 +69,9 @@ const ShopContextProvider = (props) => {
     totalCartItems,
   };
 
-  useEffect(() => {
-    console.log("Cart Items:", cartItems);
-  }, [cartItems]);
+  // useEffect(() => {
+  //   console.log("Cart Items:", cartItems);
+  // }, [cartItems]);
 
   return (
     <ShopContext.Provider value={contextValue}>

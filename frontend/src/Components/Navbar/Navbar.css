@@ -78,6 +78,11 @@
   cursor: pointer;
 }
 
+.nav-login-cart button:hover {
+  background-color: #e0e0e0; /* Darker on hover for interaction feedback */
+  color: #333; /* Slightly darker text on hover for better contrast */
+}
+
 .nav-login-cart button:active {
   background: #f3f3f3;
 }
@@ -94,4 +99,21 @@
   font-size: 14px;
   background-color: red;
   color: white;
+}
+
+.nav-user {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4a4a4a;
+  padding: 5px 20px;
+  margin-right: 5px;
+  background-color: #fcfcf9;
+  border-radius: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  transition: background-color 0.3s, color 0.3s;
 }

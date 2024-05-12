@@ -1,13 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Navbar.css";
 import logo from "../Assets/ferramas_logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useActiveMenu } from "../../Context/ActiveMenuContext"; // Import the hook
 import { ShopContext } from "../../Context/ShopContext";
+import { UserContext } from "../../Context/UserContext";
 
 export const Navbar = () => {
   const { activeMenu, setActiveMenu } = useActiveMenu();
   const { totalCartItems } = useContext(ShopContext);
+  const { user, logout } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("jwtToken");
+  //   if (token) {
+  //     const firstName = localStorage.getItem("firstName");
+  //     const lastName = localStorage.getItem("lastName");
+  //     setUser(firstName + " " + lastName);
+  //   }
+  // }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <div className="navbar">
@@ -88,14 +105,18 @@ export const Navbar = () => {
           </li>
         </ul>
         <div className="nav-login-cart">
-          <Link
-            onClick={() => {
-              setActiveMenu("");
-            }}
-            to="/login"
-          >
-            <button>Iniciar sesión</button>
-          </Link>
+          {user ? (
+            <>
+              <span className="nav-user">{user}</span>
+              <button onClick={handleLogout} className="logout-button">
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <Link to="/login">
+              <button>Iniciar sesión</button>
+            </Link>
+          )}
           <Link style={{ textDecoration: "none", color: "#626262" }} to="/cart">
             <i className="fa-solid fa-cart-shopping"></i>
           </Link>

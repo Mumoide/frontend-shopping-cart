@@ -1,0 +1,84 @@
+/* LoginSignup.css */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+  background-color: #f0f0f0;
+}
+
+.login-form {
+  padding: 40px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 340px;
+}
+
+.login-form h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.login-form p {
+  display: block;
+  color: #666;
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.login-link {
+  display: flex;
+  align-items: center;
+  color: #007bff;
+  text-decoration: none; /* Removes underline */
+  font-size: 15px;
+}
+
+.login-link i {
+  margin-right: 5px; /* Adds space between the icon and text */
+}
+
+.login-link:hover {
+  text-decoration: underline; /* Adds underline on hover for better UX */
+}
