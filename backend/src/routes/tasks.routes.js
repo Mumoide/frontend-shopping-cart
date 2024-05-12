@@ -1,6 +1,9 @@
 const { Router } = require('express');
 const pool = require('../db')
 const router = Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 
 // Fetch all products
@@ -35,12 +38,83 @@ router.get('/products/:category', async (req, res) => {
     }
 });
 
+// Create user
+router.post('/signup', async (req, res) => {
+    try {
+        const { email, password, firstName, lastName, phone } = req.body;
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // SQL query to insert a new user
+        const newUser = await pool.query(
+            'INSERT INTO users (email, password, first_name, last_name, phone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [email, hashedPassword, firstName, lastName, phone]
+        );
+
+        res.status(201).json({
+            status: "success",
+            data: {
+                user: newUser.rows[0],
+            },
+            message: "User registered successfully."
+        });
+    } catch (err) {
+        console.error(err.message);
+        if (err.code === '23505') { // PostgreSQL error code for unique violation
+            return res.status(409).json({ message: "El correo ya se encuentra registrado." });
+        }
+        res.status(500).json({ message: "Server error during user registration." });
+    }
+});
+
+// User login
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        // Check if user exists
+        const userResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const user = userResult.rows[0];
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Compare provided password with hashed password in database
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        // Create JWT token
+        const token = jwt.sign(
+            { userId: user.user_id, email: user.email }, // payload
+            process.env.JWT_SECRET, // secret key from environment variables
+            { expiresIn: '1h' } // options: token will expire in 1 hour
+        );
+
+        // Login successful, return user info and token
+        res.json({
+            status: "success",
+            data: {
+                user: {
+                    userId: user.user_id,
+                    email: user.email,
+                    firstName: user.first_name,
+                    lastName: user.last_name
+                },
+                token
+            },
+            message: "Logged in successfully."
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server error during login." });
+    }
+});
+
 router.get('/product/id', (req, res) => {
     res.send('Devolviendo un producto');
-})
-
-router.post('/createUser', (req, res) => {
-    res.send('creando X');
 })
 
 router.put('/updateX', (req, res) => {
