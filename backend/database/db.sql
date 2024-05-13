@@ -69,7 +69,7 @@ CREATE TABLE cart_items (
 
 
 -- Create Subscribers Table
-CREATE TABLE newsletter_subscribersrs (
+CREATE TABLE newsletter_subscribers (
     SubscriberID SERIAL PRIMARY KEY,
     Email VARCHAR(255) NOT NULL,
     SubscribedAt TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP

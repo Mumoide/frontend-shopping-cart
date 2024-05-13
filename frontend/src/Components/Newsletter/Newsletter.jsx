@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Newsletter.css";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
@@ -11,10 +12,31 @@ const Newsletter = () => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateEmail(email)) {
-      toast.success("Gracias por suscribirte!");
+      try {
+        const response = await fetch("http://localhost:3001/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          toast.success("Gracias por suscribirte!");
+        } else {
+          throw new Error(data.message || "Suscripción fallida");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: error.message || "An error occurred during login.",
+        });
+      }
       setEmail("");
     } else {
       toast.error("Favor de ingresar un correo valido.");
