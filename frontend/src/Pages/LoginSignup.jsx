@@ -41,15 +41,15 @@ const LoginSignup = () => {
 
         Swal.fire({
           icon: "success",
-          title: "Login Successful",
-          text: "You are now logged in.",
+          title: "Login exitoso",
+          text: "Haz ingresado correctamente.",
         }).then((result) => {
           if (result.isConfirmed) {
             navigate("/"); // Redirect to the home page or dashboard
           }
         });
       } else {
-        throw new Error(data.message || "Authentication failed");
+        throw new Error(data.message || "Autenticacion fallida");
       }
     } catch (error) {
       console.error("Login error:", error);

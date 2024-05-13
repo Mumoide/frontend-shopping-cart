@@ -3,6 +3,7 @@ const pool = require('../db')
 const router = Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 
@@ -110,6 +111,58 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: "Server error during login." });
+    }
+});
+
+// Create subscriber
+router.post('/subscribe', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // SQL query to insert a new user
+        const newSubscriber = await pool.query(
+            'INSERT INTO newsletter_subscribers (email) VALUES ($1) RETURNING *',
+            [email]
+        );
+
+        res.status(201).json({
+            status: "success",
+            data: {
+                user: newSubscriber.rows[0],
+            },
+            message: "Subscriber registered successfully."
+        })
+
+        if (res.status(201)) {
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.USER_MAIL,
+                    pass: process.env.PASS_MAIL,
+                }
+            });
+
+            var mailOptions = {
+                from: 'ferramasduoc@gmail.com',
+                to: email,
+                subject: 'Bienvenido a ferramas',
+                text: 'Te has suscrito a ferramas correctamente!'
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+        };
+    } catch (err) {
+        console.error(err.message);
+        if (err.code === '23505') { // PostgreSQL error code for unique violation
+            return res.status(409).json({ message: "El correo ya se encuentra registrado." });
+        }
+        res.status(500).json({ message: "Server error during user registration." });
     }
 });
 
