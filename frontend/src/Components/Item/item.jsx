@@ -6,7 +6,7 @@ const Item = ({ id, name, image, new_price, old_price }) => {
   const { addToCart } = useContext(ShopContext);
   const [dollarListPrice, setDollarListPrice] = useState([]);
   const [dollarPrice, setDollarPrice] = useState(null);
-  const apiKey = "711dfe657a3dc43cb5c98ca26e96241f00932163";
+  const apiKey = process.env.REACT_APP_API_KEY;
 
   useEffect(() => {
     const fetchUSPrice = async () => {
