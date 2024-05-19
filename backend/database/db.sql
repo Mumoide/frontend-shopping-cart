@@ -29,7 +29,8 @@ CREATE TABLE products (
     category_id INTEGER REFERENCES categories(category_id),
     stock_quantity INTEGER DEFAULT 0,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    image_path VARCHAR (255)
 );
 
 -- Create Orders Table
@@ -72,7 +73,8 @@ CREATE TABLE cart_items (
 CREATE TABLE newsletter_subscribers (
     SubscriberID SERIAL PRIMARY KEY,
     Email VARCHAR(255) NOT NULL,
-    SubscribedAt TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    SubscribedAt TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_email UNIQUE (Email)
 );
 
 -- Insert into categories
