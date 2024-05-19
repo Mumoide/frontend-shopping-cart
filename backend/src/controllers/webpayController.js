@@ -69,10 +69,11 @@ exports.commit = asyncHandler(async function (request, response, next) {
 
             console.log('Transaction committed:', commitResponse);
 
-            response.status(200).json(commitResponse);
+            // Redirect to frontend confirmation page with token
+            return response.redirect(`/payment-confirmation?token_ws=${token}`);
         } catch (error) {
             console.error('Error committing transaction:', error);
-            response.status(500).json({ error: error.message, stack: error.stack });
+            return response.status(500).json({ error: error.message, stack: error.stack });
         }
     } else if (!token && !tbkToken) { //Flujo 2
         step = "El pago fue anulado por tiempo de espera.";
@@ -85,7 +86,7 @@ exports.commit = asyncHandler(async function (request, response, next) {
         stepDescription = "En este paso luego de abandonar el formulario no es necesario realizar la confirmación ";
     }
 
-    response.status(400).json({
+    return response.status(400).json({
         step,
         stepDescription,
         viewData,
