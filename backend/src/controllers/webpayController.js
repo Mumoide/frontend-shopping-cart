@@ -70,7 +70,6 @@ exports.commit = asyncHandler(async function (request, response, next) {
             console.log('Transaction committed:', commitResponse);
 
             // Redirect to frontend confirmation page with token
-            return response.redirect(`/payment-confirmation?token_ws=${token}`);
         } catch (error) {
             console.error('Error committing transaction:', error);
             return response.status(500).json({ error: error.message, stack: error.stack });
