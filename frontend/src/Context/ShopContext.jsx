@@ -1,10 +1,27 @@
 import React, { createContext, useState, useEffect } from "react";
-
+import Spinner from "../Components/Spinner/Spinner";
 export const ShopContext = createContext(null);
 
 const ShopContextProvider = (props) => {
+  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [products, setProducts] = useState([]);
   const [totalCartItems, setTotalCartItems] = useState(0);
+  const [cart, setCart] = useState(null);
+  const [cartItems, setCartItems] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+    const firstName = localStorage.getItem("firstName");
+    const lastName = localStorage.getItem("lastName");
+    const storedUserId = localStorage.getItem("userId");
+    if (token && firstName && lastName && storedUserId) {
+      setUser(firstName + " " + lastName);
+      setUserId(storedUserId);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -20,6 +37,36 @@ const ShopContextProvider = (props) => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (userId) {
+      const fetchCart = async () => {
+        try {
+          const response = await fetch(`http://localhost:3001/carts/${userId}`);
+          if (response.ok) {
+            const data = await response.json();
+            setCart(data);
+            const cartItemsResponse = await fetch(
+              `http://localhost:3001/cart_items/${data.cart_id}`
+            );
+            const cartItemsData = await cartItemsResponse.json();
+            const cartItemsMap = {};
+            cartItemsData.forEach((item) => {
+              cartItemsMap[item.product_id] = item.quantity;
+            });
+            setCartItems(cartItemsMap);
+          } else {
+            // If no cart found, set cartItems to default
+            setCartItems(getDefaultCart());
+          }
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        }
+      };
+
+      fetchCart();
+    }
+  }, [userId]);
+
   const getDefaultCart = () => {
     let cart = {};
     for (const product of products) {
@@ -28,25 +75,77 @@ const ShopContextProvider = (props) => {
     return cart;
   };
 
-  const [cartItems, setCartItems] = useState({});
-
-  useEffect(() => {
-    if (products.length > 0) {
-      setCartItems(getDefaultCart());
+  const addToCart = async (productId) => {
+    if (!userId) {
+      console.error("User is not logged in.");
+      return;
     }
-  }, [products]);
 
-  const addToCart = async (itemId) => {
-    await new Promise((resolve) => setTimeout(resolve, 0)); // Dummy async behavior
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+    if (!cart) {
+      try {
+        const response = await fetch("http://localhost:3001/carts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        });
+        const data = await response.json();
+        setCart(data);
+      } catch (error) {
+        console.error("Error creating cart:", error);
+        return;
+      }
+    }
+
+    const newQuantity = (cartItems[productId] || 0) + 1;
+    setCartItems((prev) => ({ ...prev, [productId]: newQuantity }));
+
+    try {
+      await fetch("http://localhost:3001/cart_items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartId: cart ? cart.cart_id : null,
+          productId,
+          quantity: newQuantity,
+        }),
+      });
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
   };
 
-  const removeFromCart = async (itemId) => {
-    await new Promise((resolve) => setTimeout(resolve, 0)); // Dummy async behavior
-    setCartItems((prev) => ({
-      ...prev,
-      [itemId]: Math.max(prev[itemId] - 1, 0), // Ensure no negative values
-    }));
+  const removeFromCart = async (productId) => {
+    if (!cart) return;
+
+    const newQuantity = (cartItems[productId] || 0) - 1;
+    if (newQuantity <= 0) {
+      setCartItems((prev) => {
+        const { [productId]: _, ...rest } = prev;
+        return rest;
+      });
+    } else {
+      setCartItems((prev) => ({ ...prev, [productId]: newQuantity }));
+    }
+
+    try {
+      await fetch("http://localhost:3001/cart_items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartId: cart.cart_id,
+          productId,
+          quantity: newQuantity,
+        }),
+      });
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
   };
 
   useEffect(() => {
@@ -69,9 +168,9 @@ const ShopContextProvider = (props) => {
     totalCartItems,
   };
 
-  // useEffect(() => {
-  //   console.log("Cart Items:", cartItems);
-  // }, [cartItems]);
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <ShopContext.Provider value={contextValue}>

@@ -34,6 +34,7 @@ const LoginSignup = () => {
           localStorage.setItem("jwtToken", data.data.token);
           localStorage.setItem("firstName", data.data.user.firstName);
           localStorage.setItem("lastName", data.data.user.lastName);
+          localStorage.setItem("userId", data.data.user.userId);
           setUser(data.data.user.firstName + " " + data.data.user.lastName);
         } else {
           console.log("Failed to receive token:", data.message);

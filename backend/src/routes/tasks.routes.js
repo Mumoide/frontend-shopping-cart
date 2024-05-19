@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
-
+const webpayPlus = require('../webpay.js');
 
 // Fetch all products
 router.get('/products', async (req, res) => {
@@ -166,18 +166,95 @@ router.post('/subscribe', async (req, res) => {
     }
 });
 
-router.get('/product/id', (req, res) => {
-    res.send('Devolviendo un producto');
-})
+// Ruta para iniciar la transacción
+router.post('/create_transaction', async (req, res) => {
+    try {
+        const { buyOrder, sessionId, amount, returnUrl } = req.body;
+        const response = await webpayPlus.create(buyOrder, sessionId, amount, returnUrl);
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
-router.put('/updateX', (req, res) => {
-    res.send('actualizando X');
-})
+// Ruta para confirmar la transacción
+router.post('/commit_transaction', async (req, res) => {
+    try {
+        const { token } = req.body;
+        const response = await webpayPlus.commit(token);
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
+// Create a new cart
+router.post('/carts', async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const result = await pool.query(
+            'INSERT INTO carts (user_id) VALUES ($1) RETURNING *',
+            [userId]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server error creating cart." });
+    }
+});
 
-router.delete('/deleteX', (req, res) => {
-    res.send('borrando X');
-})
+// Add an item to the cart
+router.post('/cart_items', async (req, res) => {
+    try {
+        const { cartId, productId, quantity } = req.body;
+        const result = await pool.query(
+            'INSERT INTO cart_items (cart_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *',
+            [cartId, productId, quantity]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server error adding item to cart." });
+    }
+});
+
+// Get a user's cart
+router.get('/carts/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        console.log('Fetching cart for userId:', userId); // Add logging
+        const result = await pool.query(
+            'SELECT * FROM carts WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1',
+            [userId]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "No cart found for this user." });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server error retrieving cart." });
+    }
+});
+
+// Get cart items
+router.get('/cart_items/:cartId', async (req, res) => {
+    try {
+        const { cartId } = req.params;
+        console.log('Fetching items for cartId:', cartId); // Add logging
+        const result = await pool.query(
+            'SELECT * FROM cart_items WHERE cart_id = $1',
+            [cartId]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "No items found for this cart." });
+        }
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching cart items:', err.message);
+        res.status(500).json({ message: "Server error retrieving cart items." });
+    }
+});
 
 
 

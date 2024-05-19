@@ -12,15 +12,6 @@ export const Navbar = () => {
   const { user, logout } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("jwtToken");
-  //   if (token) {
-  //     const firstName = localStorage.getItem("firstName");
-  //     const lastName = localStorage.getItem("lastName");
-  //     setUser(firstName + " " + lastName);
-  //   }
-  // }, []);
-
   const handleLogout = () => {
     logout();
     navigate("/login");
