@@ -16,13 +16,16 @@ const Newsletter = () => {
     e.preventDefault();
     if (validateEmail(email)) {
       try {
-        const response = await fetch("http://localhost:3001/subscribe", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        });
+        const response = await fetch(
+          "https://shopping-cart-3rvp.onrender.com/subscribe",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          }
+        );
         const data = await response.json();
         if (response.ok) {
           toast.success("Gracias por suscribirte!");

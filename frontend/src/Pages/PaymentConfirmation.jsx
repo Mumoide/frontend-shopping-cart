@@ -12,7 +12,7 @@ const PaymentConfirmation = () => {
     const confirmPayment = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3001/commit_transaction",
+          "https://shopping-cart-3rvp.onrender.com/commit_transaction",
           {
             method: "POST",
             headers: {

@@ -6,7 +6,7 @@ exports.create = asyncHandler(async function (request, response, next) {
         const buyOrder = 'O-' + Math.floor(Math.random() * 10000) + 1;
         const sessionId = 'S-' + Math.floor(Math.random() * 10000) + 1;
         const amount = request.body.amount;
-        const returnUrl = request.protocol + '://' + request.get('host') + '/commit_transaction';
+        const returnUrl = 'https://shopping-cart-3rvp.onrender.com/commit_transaction';
 
         console.log('Initiating transaction with:', { buyOrder, sessionId, amount, returnUrl });
 
