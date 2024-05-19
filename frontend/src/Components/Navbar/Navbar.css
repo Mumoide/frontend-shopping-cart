@@ -1,6 +1,6 @@
 .nav-logo img {
-  width: 100px; /* Adjust this value to fit your design */
-  height: auto; /* Keeps the aspect ratio of the image */
+  width: 75px;
+  height: auto;
 }
 
 .nav-logo p {
@@ -34,9 +34,10 @@
   list-style: none;
   gap: 20px;
   color: #626262;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
-  margin-right: 20px;
+  float: left;
+  max-width: 55%;
 }
 
 .nav-menu li {
@@ -45,6 +46,8 @@
   justify-content: center;
   gap: 3px;
   color: #626262;
+  max-width: 20%;
+  text-align: center;
 }
 
 .nav-menu Link {
@@ -63,6 +66,7 @@
   display: flex;
   align-items: center;
   gap: 45px;
+  margin-left: 30px;
 }
 
 .nav-login-cart button {
@@ -102,10 +106,10 @@
 }
 
 .nav-user {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #4a4a4a;
-  padding: 5px 20px;
+  padding: 10px 25px;
   margin-right: 5px;
   background-color: #fcfcf9;
   border-radius: 15px;
