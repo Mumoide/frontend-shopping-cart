@@ -37,9 +37,17 @@ const ShopContextProvider = (props) => {
     fetchProducts();
   }, []);
 
+  const getDefaultCart = () => {
+    let cart = {};
+    for (const product of products) {
+      cart[product.product_id] = 0;
+    }
+    return cart;
+  };
+
   useEffect(() => {
-    if (userId) {
-      const fetchCart = async () => {
+    const fetchCart = async () => {
+      if (userId) {
         try {
           const response = await fetch(`http://localhost:3001/carts/${userId}`);
           if (response.ok) {
@@ -48,32 +56,28 @@ const ShopContextProvider = (props) => {
             const cartItemsResponse = await fetch(
               `http://localhost:3001/cart_items/${data.cart_id}`
             );
-            const cartItemsData = await cartItemsResponse.json();
-            const cartItemsMap = {};
-            cartItemsData.forEach((item) => {
-              cartItemsMap[item.product_id] = item.quantity;
-            });
-            setCartItems(cartItemsMap);
+            if (cartItemsResponse.ok) {
+              const cartItemsData = await cartItemsResponse.json();
+              const cartItemsMap = {};
+              cartItemsData.forEach((item) => {
+                cartItemsMap[item.product_id] = item.quantity;
+              });
+              setCartItems(cartItemsMap);
+            } else {
+              setCartItems(getDefaultCart());
+            }
           } else {
-            // If no cart found, set cartItems to default
             setCartItems(getDefaultCart());
           }
         } catch (error) {
           console.error("Error fetching cart:", error);
+          setCartItems(getDefaultCart());
         }
-      };
+      }
+    };
 
-      fetchCart();
-    }
+    fetchCart();
   }, [userId]);
-
-  const getDefaultCart = () => {
-    let cart = {};
-    for (const product of products) {
-      cart[product.product_id] = 0;
-    }
-    return cart;
-  };
 
   const addToCart = async (productId) => {
     if (!userId) {

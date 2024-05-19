@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Signup from './Pages/Signup';
 import ShopContextProvider from './Context/ShopContext';
+import PaymentConfirmation from './Pages/PaymentConfirmation';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path='/cart' element={<Cart />}></Route>
                 <Route path='/login' element={<LoginSignup />}></Route>
                 <Route path='/signup' element={<Signup />}></Route>
+                <Route path='/payment-confirmation' element={<PaymentConfirmation />} />
               </Routes>
             </ActiveMenuProvider>
           </ShopContextProvider>

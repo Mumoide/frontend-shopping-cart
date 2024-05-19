@@ -7,7 +7,6 @@ const CartItems = () => {
   const { products, cartItems, removeFromCart } = useContext(ShopContext);
   const [productsEdited, setProductsEdited] = useState([]);
 
-  // Process the products data and update productsEdited state
   useEffect(() => {
     const processProducts = async () => {
       try {
@@ -32,8 +31,34 @@ const CartItems = () => {
     );
   };
 
+  const handlePayment = async () => {
+    const token = localStorage.getItem("jwtToken"); // Retrieve token from local storage
+    console.log("Token:", token);
+
+    try {
+      const response = await fetch("http://localhost:3001/create_transaction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ amount: total }), // Assuming `total` is defined
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Redirecting to:", data.url);
+        window.location.href = data.url;
+      } else {
+        console.error("Error initiating transaction:", data);
+      }
+    } catch (error) {
+      console.error("Error initiating transaction:", error);
+    }
+  };
+
   const subtotal = calculateSubtotal();
-  const total = subtotal; // Agregar costo de envío en caso de ser necesario
+  const total = subtotal;
 
   return (
     <div className="cartitems">
@@ -96,7 +121,9 @@ const CartItems = () => {
             </div>
           </div>
           <button className="btn-transfer">Pagar con transferencia</button>
-          <button className="btn-card">Pagar con tarjeta</button>
+          <button className="btn-card" onClick={handlePayment}>
+            Pagar con tarjeta
+          </button>
         </div>
         <div className="cartitems-login">
           <p>¡Inicia sesión para obtener descuentos!</p>

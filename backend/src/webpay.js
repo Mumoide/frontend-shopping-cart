@@ -1,11 +1,13 @@
-const { WebpayPlus, Options, Environment } = require('transbank-sdk');
+const { WebpayPlus, Options, IntegrationCommerceCodes, IntegrationApiKeys, Environment } = require('transbank-sdk');
 
-// Configuración del comercio en modo desarrollador
-const commerceCode = '597055555532';
-const apiKey = '01234567890123456789012345678901';
+// Use the integration credentials for development
+const commerceCode = IntegrationCommerceCodes.WEBPAY_PLUS;
+const apiKey = IntegrationApiKeys.WEBPAY;
+const environment = Environment.Integration;
 
-const options = new Options(commerceCode, apiKey, Environment.Integration);
+// Configure WebpayPlus for Testing
+WebpayPlus.configureForTesting(commerceCode, apiKey, environment);
 
-const webpayPlus = new WebpayPlus.Transaction(options);
+const webpayPlus = new WebpayPlus.Transaction(new Options(commerceCode, apiKey, environment));
 
-module.exports = webpayPlus;
+module.exports = { webpayPlus, WebpayPlus };

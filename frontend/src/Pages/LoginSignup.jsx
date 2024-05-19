@@ -7,7 +7,7 @@ import { UserContext } from "../Context/UserContext";
 const LoginSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
   useEffect(() => {
     // Check if the user is already logged in
@@ -46,7 +46,8 @@ const LoginSignup = () => {
           text: "Haz ingresado correctamente.",
         }).then((result) => {
           if (result.isConfirmed) {
-            navigate("/"); // Redirect to the home page or dashboard
+            window.location.reload();
+            navigate("/");
           }
         });
       } else {
