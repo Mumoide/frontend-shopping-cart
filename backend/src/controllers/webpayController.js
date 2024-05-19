@@ -7,7 +7,7 @@ exports.create = asyncHandler(async function (request, response, next) {
         const sessionId = 'S-' + Math.floor(Math.random() * 10000) + 1;
         const amount = request.body.amount;
         const returnUrl =
-            request.protocol + "://" + request.get("host") + "/webpay_plus/commit_transaction'";
+            request.protocol + "://" + request.get("host") + "/commit_transaction'";
 
         console.log('Initiating transaction with:', { buyOrder, sessionId, amount, returnUrl });
 
