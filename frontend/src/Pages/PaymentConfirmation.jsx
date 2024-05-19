@@ -8,6 +8,7 @@ const PaymentConfirmation = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token_ws");
+    console.log("Token from params:", token);
 
     const confirmPayment = async () => {
       try {
