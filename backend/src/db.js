@@ -6,7 +6,10 @@ const pool = new Pool({
     password: process.env.PASSWORD,
     host: process.env.DB_HOST,
     port: 5432,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    ssl: {
+        rejectUnauthorized: false, // Required for most cloud database services
+    },
 })
 
 module.exports = pool;
