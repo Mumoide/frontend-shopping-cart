@@ -35,7 +35,7 @@ router.use((req, res, next) => {
 
 router.post("/create_transaction", verifyJWT, webpayController.create);
 router.post("/commit_transaction", verifyJWT, webpayController.commit);
-router.get("/commit_transaction", verifyJWT, webpayController.commit);
+router.get("/commit_transaction", webpayController.commit);
 router.post("/status", verifyJWT, webpayController.status);
 router.post("/refund", verifyJWT, webpayController.refund);
 

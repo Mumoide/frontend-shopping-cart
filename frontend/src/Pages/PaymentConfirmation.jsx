@@ -4,21 +4,11 @@ import { useLocation } from "react-router-dom";
 const PaymentConfirmation = () => {
   const location = useLocation();
   const [status, setStatus] = useState(null);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token_ws");
-    const tbkToken = params.get("TBK_TOKEN");
-    const tbkOrdenCompra = params.get("TBK_ORDEN_COMPRA");
-    const tbkIdSesion = params.get("TBK_ID_SESION");
-
-    console.log("Params received:", {
-      token,
-      tbkToken,
-      tbkOrdenCompra,
-      tbkIdSesion,
-    });
+    console.log("Token from params:", token);
 
     const confirmPayment = async () => {
       try {
@@ -28,41 +18,22 @@ const PaymentConfirmation = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-              token_ws: token,
-              TBK_TOKEN: tbkToken,
-              TBK_ORDEN_COMPRA: tbkOrdenCompra,
-              TBK_ID_SESION: tbkIdSesion,
-            }),
+            body: JSON.stringify({ token_ws: token }),
           }
         );
-
-        if (!response.ok) {
-          throw new Error("Error confirming payment");
-        }
 
         const data = await response.json();
         setStatus(data);
       } catch (error) {
-        setError(error.message);
+        console.error("Error confirming payment:", error);
       }
     };
 
-    if (token || tbkToken || tbkOrdenCompra || tbkIdSesion) {
+    if (token) {
       confirmPayment();
     }
   }, [location]);
-
-  if (error) {
-    return (
-      <div>
-        <h1>Payment Confirmation</h1>
-        <p>Error: {error}</p>
-      </div>
-    );
-  }
 
   if (!status) {
     return <div>Loading...</div>;
@@ -71,8 +42,8 @@ const PaymentConfirmation = () => {
   return (
     <div>
       <h1>Payment Confirmation</h1>
-      <p>Status: {status.step}</p>
-      <p>Description: {status.stepDescription}</p>
+      <p>{status.status}</p>
+      <p>{status.message}</p>
       {status.viewData && (
         <>
           <p>Order ID: {status.viewData.token}</p>
