@@ -48,7 +48,7 @@ const CartItems = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Redirecting to:", data.url);
-        window.location.href = data.url;
+        window.location.href = `${data.url}?token_ws=${data.token}`;
       } else {
         console.error("Error initiating transaction:", data);
       }

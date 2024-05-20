@@ -6,7 +6,7 @@ exports.create = asyncHandler(async function (request, response, next) {
         const buyOrder = 'O-' + Math.floor(Math.random() * 10000) + 1;
         const sessionId = 'S-' + Math.floor(Math.random() * 10000) + 1;
         const amount = request.body.amount;
-        const returnUrl = request.protocol + '://' + request.get('host') + '/commit_transaction';
+        const returnUrl = "http://localhost:3000/payment-confirmation";
 
         console.log('Initiating transaction with:', { buyOrder, sessionId, amount, returnUrl });
 
@@ -69,10 +69,10 @@ exports.commit = asyncHandler(async function (request, response, next) {
 
             console.log('Transaction committed:', commitResponse);
 
-            response.status(200).json(commitResponse);
+            // Redirect to frontend confirmation page with token
         } catch (error) {
             console.error('Error committing transaction:', error);
-            response.status(500).json({ error: error.message, stack: error.stack });
+            return response.status(500).json({ error: error.message, stack: error.stack });
         }
     } else if (!token && !tbkToken) { //Flujo 2
         step = "El pago fue anulado por tiempo de espera.";
@@ -85,7 +85,7 @@ exports.commit = asyncHandler(async function (request, response, next) {
         stepDescription = "En este paso luego de abandonar el formulario no es necesario realizar la confirmación ";
     }
 
-    response.status(400).json({
+    return response.status(400).json({
         step,
         stepDescription,
         viewData,
