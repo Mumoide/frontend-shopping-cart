@@ -1,4 +1,4 @@
-const API_URL = 'https://shopping-cart-3rvp.onrender.com/api/webpay';
+const API_URL = 'http://localhost:3001/api/webpay';
 
 const createTransaction = async (buyOrder, sessionId, amount, returnUrl) => {
     const response = await fetch(`${API_URL}/create_transaction`, {

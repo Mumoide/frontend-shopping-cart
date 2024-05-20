@@ -26,9 +26,7 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(
-          `https://shopping-cart-3rvp.onrender.com/products/`
-        );
+        const response = await fetch(`http://localhost:3001/products/`);
         const data = await response.json();
         setProducts(data);
       } catch (error) {
@@ -51,14 +49,12 @@ const ShopContextProvider = (props) => {
     const fetchCart = async () => {
       if (userId) {
         try {
-          const response = await fetch(
-            `https://shopping-cart-3rvp.onrender.com/carts/${userId}`
-          );
+          const response = await fetch(`http://localhost:3001/carts/${userId}`);
           if (response.ok) {
             const data = await response.json();
             setCart(data);
             const cartItemsResponse = await fetch(
-              `https://shopping-cart-3rvp.onrender.com/cart_items/${data.cart_id}`
+              `http://localhost:3001/cart_items/${data.cart_id}`
             );
             if (cartItemsResponse.ok) {
               const cartItemsData = await cartItemsResponse.json();
@@ -91,16 +87,13 @@ const ShopContextProvider = (props) => {
 
     if (!cart) {
       try {
-        const response = await fetch(
-          "https://shopping-cart-3rvp.onrender.com/carts",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }),
-          }
-        );
+        const response = await fetch("http://localhost:3001/carts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        });
         const data = await response.json();
         setCart(data);
       } catch (error) {
@@ -113,7 +106,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [productId]: newQuantity }));
 
     try {
-      await fetch("https://shopping-cart-3rvp.onrender.com/cart_items", {
+      await fetch("http://localhost:3001/cart_items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -143,7 +136,7 @@ const ShopContextProvider = (props) => {
     }
 
     try {
-      await fetch("https://shopping-cart-3rvp.onrender.com/cart_items", {
+      await fetch("http://localhost:3001/cart_items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

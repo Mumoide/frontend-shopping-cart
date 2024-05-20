@@ -24,22 +24,19 @@ const Signup = () => {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the form from refreshing the page
     try {
-      const response = await fetch(
-        "https://shopping-cart-3rvp.onrender.com/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            phone: formData.phone,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:3001/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
+        }),
+      });
       const data = await response.json();
       if (response.ok) {
         console.log("Signup successful:", data);

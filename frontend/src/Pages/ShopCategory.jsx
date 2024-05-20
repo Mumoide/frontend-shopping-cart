@@ -18,13 +18,13 @@ const ShopCategory = ({ category }) => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `https://shopping-cart-3rvp.onrender.com/products/${categoryName}`
+          `http://localhost:3001/products/${categoryName}`
         );
         const data = await response.json();
         setProducts(
           data.map((product) => ({
             ...product,
-            imagePath: `http://shopping-cart-3rvp.onrender.com/${product.image_path}`,
+            imagePath: `http://localhost:3001/${product.image_path}`,
           }))
         );
       } catch (error) {
