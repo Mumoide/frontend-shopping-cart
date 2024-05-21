@@ -7,7 +7,7 @@ exports.create = asyncHandler(async function (request, response, next) {
         const sessionId = 'S-' + Math.floor(Math.random() * 10000) + 1;
         const amount = request.body.amount;
         const returnUrl = "http://localhost:3000/payment-confirmation";
-
+        console.log(request.body)
         console.log('Initiating transaction with:', { buyOrder, sessionId, amount, returnUrl });
 
         const createResponse = await new WebpayPlus.Transaction().create(

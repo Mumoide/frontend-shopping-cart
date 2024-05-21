@@ -4,8 +4,19 @@ import { ShopContext } from "../../Context/ShopContext";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const CartItems = () => {
-  const { products, cartItems, removeFromCart } = useContext(ShopContext);
+  const { products, cartItems, removeFromCart, cartId } =
+    useContext(ShopContext);
   const [productsEdited, setProductsEdited] = useState([]);
+  const [isUserLogged, setIsUserLogged] = useState(false);
+  const storedUserId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    if (storedUserId) {
+      setIsUserLogged(true);
+    } else {
+      setIsUserLogged(false);
+    }
+  });
 
   useEffect(() => {
     const processProducts = async () => {
@@ -31,6 +42,9 @@ const CartItems = () => {
     );
   };
 
+  const subtotal = calculateSubtotal();
+  const total = subtotal;
+
   const handlePayment = async () => {
     const token = localStorage.getItem("jwtToken"); // Retrieve token from local storage
     console.log("Token:", token);
@@ -42,7 +56,11 @@ const CartItems = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount: total }), // Assuming `total` is defined
+        body: JSON.stringify({
+          amount: total,
+          isUserLogged: isUserLogged,
+          cartId: cartId,
+        }), // Assuming `total` is defined
       });
 
       const data = await response.json();
@@ -56,9 +74,6 @@ const CartItems = () => {
       console.error("Error initiating transaction:", error);
     }
   };
-
-  const subtotal = calculateSubtotal();
-  const total = subtotal;
 
   return (
     <div className="cartitems">

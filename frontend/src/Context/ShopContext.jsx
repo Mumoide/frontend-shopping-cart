@@ -10,6 +10,7 @@ const ShopContextProvider = (props) => {
   const [cart, setCart] = useState(null);
   const [cartItems, setCartItems] = useState({});
   const [loading, setLoading] = useState(true);
+  const [cartId, setCartId] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
@@ -63,6 +64,7 @@ const ShopContextProvider = (props) => {
                 cartItemsMap[item.product_id] = item.quantity;
               });
               setCartItems(cartItemsMap);
+              setCartId(data.cart_id);
             } else {
               setCartItems(getDefaultCart());
             }
@@ -170,6 +172,7 @@ const ShopContextProvider = (props) => {
     addToCart,
     removeFromCart,
     totalCartItems,
+    cartId,
   };
 
   if (loading) {
