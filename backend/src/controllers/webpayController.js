@@ -56,7 +56,42 @@ exports.create = asyncHandler(async function (request, response, next) {
             discount: "discount_user_logged_in",
         });
 
-        //const createTransaction = (cart_id) => { };
+        const createOrder = async (cartId, total_price) => {
+            const userResult = await pool.query(
+                'SELECT user_id FROM carts WHERE cart_id = $1',
+                [cartId]
+            );
+            const userId = userResult.rows[0].user_id;
+
+            const orderResult = await pool.query(
+                'INSERT INTO orders (user_id, status, total_price) VALUES ($1, $2, $3) RETURNING order_id',
+                [userId, 'Waiting', total_price]
+            );
+            const orderId = orderResult.rows[0].order_id;
+
+            const cartItemsResult = await pool.query(
+                'SELECT product_id, quantity FROM cart_items WHERE cart_id = $1 AND active = 1',
+                [cartId]
+            );
+
+            for (const item of cartItemsResult.rows) {
+                const productResult = await pool.query(
+                    'SELECT price FROM products WHERE product_id = $1',
+                    [item.product_id]
+                );
+                const priceAtTimeOfOrder = productResult.rows[0].price;
+
+                await pool.query(
+                    'INSERT INTO order_details (order_id, product_id, quantity, price_at_time_of_order) VALUES ($1, $2, $3, $4)',
+                    [orderId, item.product_id, item.quantity, priceAtTimeOfOrder]
+                );
+            }
+
+            return orderId;
+        };
+
+        const orderId = await createOrder(cartId, newTotal);
+        console.log('Order created with ID: ', orderId);
 
         const buyOrder = "O-" + Math.floor(Math.random() * 10000) + 1;
         const sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
