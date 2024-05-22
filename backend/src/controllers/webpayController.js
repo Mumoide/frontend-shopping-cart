@@ -1,32 +1,91 @@
 const { WebpayPlus } = require('transbank-sdk');
 const asyncHandler = require('../utils/async_handler');
+const pool = require("../db");
 
 exports.create = asyncHandler(async function (request, response, next) {
     try {
-        const buyOrder = 'O-' + Math.floor(Math.random() * 10000) + 1;
-        const sessionId = 'S-' + Math.floor(Math.random() * 10000) + 1;
-        const amount = request.body.amount;
+        const { cartId, amount, isUserLogged } = request.body;
+        console.log('body ', request.body)
+        const validatePrices = async ({ cartId, amount }) => {
+            const result = parseInt(
+                (
+                    await pool.query(
+                        `WITH sc AS (
+                            SELECT c.cart_id , p.price*ci.quantity as price
+                            FROM carts c 
+                            JOIN cart_items ci
+                            ON ci.cart_id  = c.cart_id 
+                            JOIN products p 
+                            ON ci.product_id  = p.product_id
+                            WHERE c.cart_id  = $1
+                            AND ci.active = 1
+                                    ) 
+                        SELECT SUM(sc.price)
+                        FROM sc`,
+                        [cartId]
+                    )
+                ).rows[0].sum
+            );
+            console.log('result ', result)
+            if (amount == result) {
+                return true;
+            }
+            return false;
+        };
+
+        if (!(await validatePrices({ cartId, amount }))) {
+            return response.status(400).json({ error: "Precios no validos" });
+        }
+
+        const applyDiscounts = async ({ isUserLogged, amount, discount }) => {
+            if (isUserLogged) {
+                const result = await pool.query(
+                    `SELECT discount FROM discounts WHERE id = $1;`,
+                    [discount]
+                );
+                const discountValue = parseFloat(result.rows[0].discount);
+                console.log('discountValue ', discountValue);
+                return amount * (1 - discountValue);
+            }
+            return amount;
+        };
+
+        const newTotal = await applyDiscounts({
+            isUserLogged,
+            amount,
+            discount: "discount_user_logged_in",
+        });
+
+        //const createTransaction = (cart_id) => { };
+
+        const buyOrder = "O-" + Math.floor(Math.random() * 10000) + 1;
+        const sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
         const returnUrl = "http://localhost:3000/payment-confirmation";
 
-        console.log('Initiating transaction with:', { buyOrder, sessionId, amount, returnUrl });
+        console.log("Initiating transaction with:", {
+            buyOrder,
+            sessionId,
+            newTotal,
+            returnUrl,
+        });
 
         const createResponse = await new WebpayPlus.Transaction().create(
             buyOrder,
             sessionId,
-            amount,
+            newTotal,
             returnUrl
         );
 
         const { token, url } = createResponse;
 
-        console.log('Transaction created:', { token, url });
+        console.log("Transaction created:", { token, url });
 
         response.status(200).json({
             token,
             url,
         });
     } catch (error) {
-        console.error('Error creating transaction:', error);
+        console.error("Error creating transaction:", error);
         response.status(500).json({ error: error.message, stack: error.stack });
     }
 });

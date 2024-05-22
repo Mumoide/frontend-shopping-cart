@@ -1,11 +1,23 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./CartItems.css";
 import { ShopContext } from "../../Context/ShopContext";
+import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const CartItems = () => {
-  const { products, cartItems, removeFromCart } = useContext(ShopContext);
+  const { products, cartItems, removeFromCart, cartId } =
+    useContext(ShopContext);
   const [productsEdited, setProductsEdited] = useState([]);
+  const [isUserLogged, setIsUserLogged] = useState(false);
+  const storedUserId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    if (storedUserId) {
+      setIsUserLogged(true);
+    } else {
+      setIsUserLogged(false);
+    }
+  });
 
   useEffect(() => {
     const processProducts = async () => {
@@ -31,6 +43,10 @@ const CartItems = () => {
     );
   };
 
+  const subtotal = calculateSubtotal();
+  const discount = isUserLogged ? subtotal * 0.1 : 0;
+  const total = subtotal - discount;
+
   const handlePayment = async () => {
     const token = localStorage.getItem("jwtToken"); // Retrieve token from local storage
     console.log("Token:", token);
@@ -42,7 +58,11 @@ const CartItems = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount: total }), // Assuming `total` is defined
+        body: JSON.stringify({
+          amount: subtotal,
+          isUserLogged: isUserLogged,
+          cartId: cartId,
+        }), // Assuming `total` is defined
       });
 
       const data = await response.json();
@@ -56,9 +76,6 @@ const CartItems = () => {
       console.error("Error initiating transaction:", error);
     }
   };
-
-  const subtotal = calculateSubtotal();
-  const total = subtotal;
 
   return (
     <div className="cartitems">
@@ -109,6 +126,15 @@ const CartItems = () => {
               <p>Subtotal</p>
               <p>{`$${subtotal.toFixed(2)}`}</p>
             </div>
+            {isUserLogged && (
+              <>
+                <hr />
+                <div className="cartitems-total-item">
+                  <p>Descuento (10%)</p>
+                  <p>{`- $${discount.toFixed(2)}`}</p>
+                </div>
+              </>
+            )}
             <hr />
             <div className="cartitems-total-item">
               <p>Costo de envío</p>
@@ -126,8 +152,19 @@ const CartItems = () => {
           </button>
         </div>
         <div className="cartitems-login">
-          <p>¡Inicia sesión para obtener descuentos!</p>
-          <button>Iniciar sesión</button>
+          {isUserLogged ? (
+            <p className="discount-message">
+              ¡Se ha aplicado un 10% de descuento por estar registrado a
+              Ferramas!
+            </p>
+          ) : (
+            <>
+              <p>¡Inicia sesión para obtener descuentos!</p>
+              <Link to="/login" className="login-button">
+                Iniciar sesión
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

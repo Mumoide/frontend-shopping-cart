@@ -144,24 +144,98 @@
   text-align: center;
 }
 
-.cartitems-login button {
+.cartitems-login .login-button {
+  display: inline-block;
   width: 100%;
-  height: 50px;
+  height: 30px;
   border: none;
   border-radius: 5px;
   background: #007bff;
   color: #fff;
   font-size: 16px;
   font-weight: 600;
+  text-align: center;
+  line-height: 30px;
   cursor: pointer;
   transition: background 0.3s ease;
+  text-decoration: none;
 }
 
-.cartitems-login button:hover {
+.cartitems-login .login-button:hover {
   background: #0069d9;
 }
 
 .cartitems-format img {
   object-fit: contain;
   background-color: #f0f0f0;
+}
+
+.cartitems-login .login-button {
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+}
+
+.cartitems-login .login-button:hover {
+  background: #0069d9;
+}
+
+.discount-message {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4caf50;
+  background: #e8f5e9;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.cartitems-total-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.btn-transfer,
+.btn-card {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-transfer {
+  background: #28a745;
+  color: #fff;
+}
+
+.btn-transfer:hover {
+  background: #218838;
+}
+
+.btn-card {
+  background: #ff4a4a;
+  color: #fff;
+}
+
+.btn-card:hover {
+  background: #cf3b3b;
 }
