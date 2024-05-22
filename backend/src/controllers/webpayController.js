@@ -98,14 +98,14 @@ exports.create = asyncHandler(async function (request, response, next) {
         const returnUrl = "http://localhost:3000/payment-confirmation";
 
         console.log("Initiating transaction with:", {
-            buyOrder,
+            orderId,
             sessionId,
             newTotal,
             returnUrl,
         });
 
         const createResponse = await new WebpayPlus.Transaction().create(
-            buyOrder,
+            orderId.toString(),
             sessionId,
             newTotal,
             returnUrl
@@ -161,9 +161,16 @@ exports.commit = asyncHandler(async function (request, response, next) {
                 "Transbank que hemos recibido la transacción ha sido recibida exitosamente. En caso de que " +
                 "no se confirme la transacción, ésta será reversada.";
 
-            console.log('Transaction committed:', commitResponse);
-
-            // Redirect to frontend confirmation page with token
+            order_id = commitResponse.buy_order
+            state = commitResponse.status
+            const updateOrderStatus = async (order_id, state) => {
+                await pool.query(
+                    `UPDATE orders SET STATUS = $2
+                        WHERE ORDER_ID = $1`,
+                    [order_id, state]
+                );
+            };
+            await updateOrderStatus(order_id, state);
         } catch (error) {
             console.error('Error committing transaction:', error);
             return response.status(500).json({ error: error.message, stack: error.stack });
@@ -171,12 +178,15 @@ exports.commit = asyncHandler(async function (request, response, next) {
     } else if (!token && !tbkToken) { //Flujo 2
         step = "El pago fue anulado por tiempo de espera.";
         stepDescription = "En este paso luego de anulación por tiempo de espera (+10 minutos) no es necesario realizar la confirmación ";
+        const commitResponse = await new WebpayPlus.Transaction().commit(token);
     } else if (!token && tbkToken) { //Flujo 3
         step = "El pago fue anulado por el usuario.";
         stepDescription = "En este paso luego de abandonar el formulario no es necesario realizar la confirmación ";
+        const commitResponse = await new WebpayPlus.Transaction().commit(tbkToken);
     } else if (token && tbkToken) { //Flujo 4
         step = "El pago es inválido.";
         stepDescription = "En este paso luego de abandonar el formulario no es necesario realizar la confirmación ";
+        const commitResponse = await new WebpayPlus.Transaction().commit(token);
     }
 
     return response.status(400).json({
