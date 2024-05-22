@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./CartItems.css";
 import { ShopContext } from "../../Context/ShopContext";
+import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const CartItems = () => {
@@ -43,7 +44,8 @@ const CartItems = () => {
   };
 
   const subtotal = calculateSubtotal();
-  const total = subtotal;
+  const discount = isUserLogged ? subtotal * 0.1 : 0;
+  const total = subtotal - discount;
 
   const handlePayment = async () => {
     const token = localStorage.getItem("jwtToken"); // Retrieve token from local storage
@@ -57,7 +59,7 @@ const CartItems = () => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          amount: total,
+          amount: subtotal,
           isUserLogged: isUserLogged,
           cartId: cartId,
         }), // Assuming `total` is defined
@@ -124,6 +126,15 @@ const CartItems = () => {
               <p>Subtotal</p>
               <p>{`$${subtotal.toFixed(2)}`}</p>
             </div>
+            {isUserLogged && (
+              <>
+                <hr />
+                <div className="cartitems-total-item">
+                  <p>Descuento (10%)</p>
+                  <p>{`- $${discount.toFixed(2)}`}</p>
+                </div>
+              </>
+            )}
             <hr />
             <div className="cartitems-total-item">
               <p>Costo de envío</p>
@@ -141,8 +152,19 @@ const CartItems = () => {
           </button>
         </div>
         <div className="cartitems-login">
-          <p>¡Inicia sesión para obtener descuentos!</p>
-          <button>Iniciar sesión</button>
+          {isUserLogged ? (
+            <p className="discount-message">
+              ¡Se ha aplicado un 10% de descuento por estar registrado a
+              Ferramas!
+            </p>
+          ) : (
+            <>
+              <p>¡Inicia sesión para obtener descuentos!</p>
+              <Link to="/login" className="login-button">
+                Iniciar sesión
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -77,6 +77,12 @@ CREATE TABLE newsletter_subscribers (
     CONSTRAINT unique_email UNIQUE (Email)
 );
 
+-- Create Discounts Table
+CREATE TABLE discounts (
+    id VARCHAR(255) PRIMARY key,
+    discount DECIMAL(6,6)
+);
+
 -- Insert into categories
 INSERT INTO categories (name, description) VALUES
 ('Herramientas manuales', 'Herramientas de uso manual para todo tipo de trabajos.'),
@@ -107,3 +113,5 @@ INSERT INTO products (name, description, price, old_price, category_id, stock_qu
 ('Equipos de medición', 'Equipos para medición precisa en diversos trabajos.', 7500, 9000, 5, 65, 'images/accesorios_varios/equiposdemedicion.jpg'),
 ('Tornillos y anclajes', 'Tornillos y anclajes de alta resistencia.', 1000, 1500, 5, 210, 'images/accesorios_varios/tornillosyanclajes.jpg');
 
+-- Insert into discounts
+insert into discounts(id, discount) values ('discount_user_logged_in', 0.01);

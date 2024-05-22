@@ -12,7 +12,7 @@ require('dotenv').config();
 // Enhanced error logging
 router.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
+    res.status(500).send("Something broke!");
 });
 
 router.use((req, res, next) => {
@@ -204,12 +204,41 @@ router.post('/carts', async (req, res) => {
 
 // Add an item to the cart
 router.post('/cart_items', async (req, res) => {
+    const { cartId, productId, quantity } = req.body;
+
     try {
-        const { cartId, productId, quantity } = req.body;
+        // Update existing items to inactive
+        await pool.query(
+            `UPDATE cart_items SET active = 0 
+            WHERE cart_id = $1 AND product_id = $2`,
+            [cartId, productId]
+        );
+
+        // Insert new item
         const result = await pool.query(
-            'INSERT INTO cart_items (cart_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *',
+            'INSERT INTO cart_items (cart_id, product_id, quantity, active) VALUES ($1, $2, $3, 1) RETURNING *',
             [cartId, productId, quantity]
         );
+
+        // Check the quantity of the inserted item
+        const quantityResult = await pool.query(
+            `SELECT SUM(quantity) as total_quantity
+            FROM cart_items 
+            WHERE active = 1 AND cart_id = $1 AND product_id = $2`,
+            [cartId, productId]
+        );
+
+        const totalQuantity = quantityResult.rows[0].total_quantity;
+
+        // If quantity is 0, update the item to inactive again
+        if (totalQuantity == 0) {
+            await pool.query(
+                `UPDATE cart_items SET active = 0 
+                WHERE cart_id = $1 AND product_id = $2`,
+                [cartId, productId]
+            );
+        }
+
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('Error adding item to cart:', err.message);
