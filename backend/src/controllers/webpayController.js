@@ -7,6 +7,9 @@ exports.create = asyncHandler(async function (request, response, next) {
         const { cartId, amount, isUserLogged } = request.body;
         console.log('body ', request.body)
         const validatePrices = async ({ cartId, amount }) => {
+            if (!isUserLogged) {
+                return true
+            }
             const result = parseInt(
                 (
                     await pool.query(
@@ -26,7 +29,7 @@ exports.create = asyncHandler(async function (request, response, next) {
                     )
                 ).rows[0].sum
             );
-            console.log('result ', result)
+            // console.log('result ', result)
             if (amount == result) {
                 return true;
             }
@@ -90,22 +93,31 @@ exports.create = asyncHandler(async function (request, response, next) {
             return orderId;
         };
 
-        const orderId = await createOrder(cartId, newTotal);
-        console.log('Order created with ID: ', orderId);
+        if (cartId) {
+            const orderId = await createOrder(cartId, newTotal);
+            console.log('Order created with ID: ', orderId);
+        }
+
 
         const buyOrder = "O-" + Math.floor(Math.random() * 10000) + 1;
         const sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
         const returnUrl = "http://localhost:3000/payment-confirmation";
 
+        const finalOrderId = async () => { if (cartId) { return await createOrder(cartId, newTotal); } else return buyOrder }
+
+        const definitiveOrderId = await finalOrderId()
+
+        console.log(definitiveOrderId)
+
         console.log("Initiating transaction with:", {
-            orderId,
+            definitiveOrderId,
             sessionId,
             newTotal,
             returnUrl,
         });
 
         const createResponse = await new WebpayPlus.Transaction().create(
-            orderId.toString(),
+            definitiveOrderId.toString(),
             sessionId,
             newTotal,
             returnUrl
@@ -114,6 +126,15 @@ exports.create = asyncHandler(async function (request, response, next) {
         const { token, url } = createResponse;
 
         console.log("Transaction created:", { token, url });
+
+        const resetCart = async (cartId) => {
+            await pool.query(
+                `UPDATE cart_items SET active = 0 WHERE cart_id = $1`,
+                [cartId]
+            );
+        };
+
+        await resetCart(cartId)
 
         response.status(200).json({
             token,
@@ -163,6 +184,7 @@ exports.commit = asyncHandler(async function (request, response, next) {
 
             order_id = commitResponse.buy_order
             state = commitResponse.status
+            console.log(commitResponse)
             const updateOrderStatus = async (order_id, state) => {
                 await pool.query(
                     `UPDATE orders SET STATUS = $2
@@ -170,7 +192,9 @@ exports.commit = asyncHandler(async function (request, response, next) {
                     [order_id, state]
                 );
             };
-            await updateOrderStatus(order_id, state);
+            if (!(order_id[0] == 'O')) {
+                await updateOrderStatus(order_id, state);
+            }
         } catch (error) {
             console.error('Error committing transaction:', error);
             return response.status(500).json({ error: error.message, stack: error.stack });

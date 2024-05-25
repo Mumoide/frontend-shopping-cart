@@ -64,6 +64,7 @@ const ShopContextProvider = (props) => {
             );
             if (cartItemsResponse.ok) {
               const cartItemsData = await cartItemsResponse.json();
+              console.log(cartItemsData);
               const cartItemsMap = {};
               cartItemsData.forEach((item) => {
                 cartItemsMap[item.product_id] = item.quantity;
@@ -79,6 +80,10 @@ const ShopContextProvider = (props) => {
           console.error("Error fetching cart:", error);
           setCartItems(getDefaultCart());
         }
+      } else {
+        const localCart =
+          JSON.parse(localStorage.getItem("cartItems")) || getDefaultCart();
+        setCartItems(localCart);
       }
     };
 
@@ -88,7 +93,13 @@ const ShopContextProvider = (props) => {
   // Add items to cart, create cart if it doesnt exist
   const addToCart = async (productId) => {
     if (!userId) {
-      console.error("User is not logged in.");
+      // Handle local storage cart
+      const localCart =
+        JSON.parse(localStorage.getItem("cartItems")) || getDefaultCart();
+      const newQuantity = (localCart[productId] || 0) + 1;
+      const updatedCart = { ...localCart, [productId]: newQuantity };
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+      setCartItems(updatedCart);
       return;
     }
 
@@ -146,6 +157,23 @@ const ShopContextProvider = (props) => {
   };
 
   const removeFromCart = async (productId) => {
+    if (!userId) {
+      // Handle local storage cart removal
+      const localCart =
+        JSON.parse(localStorage.getItem("cartItems")) || getDefaultCart();
+      const newQuantity = (localCart[productId] || 0) - 1;
+      if (newQuantity <= 0) {
+        const { [productId]: _, ...rest } = localCart;
+        localStorage.setItem("cartItems", JSON.stringify(rest));
+        setCartItems(rest);
+      } else {
+        const updatedCart = { ...localCart, [productId]: newQuantity };
+        localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+        setCartItems(updatedCart);
+      }
+      return;
+    }
+
     if (!cart) return;
 
     const newQuantity = (cartItems[productId] || 0) - 1;

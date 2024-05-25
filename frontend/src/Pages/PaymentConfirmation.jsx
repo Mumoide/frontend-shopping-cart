@@ -66,6 +66,10 @@ const PaymentConfirmation = () => {
     return <div className="payment-confirmation-loading">Cargando...</div>;
   }
 
+  if (status.viewData) {
+    localStorage.removeItem("cartItems");
+  }
+
   const getStatusClass = (status) => {
     if (status === "AUTHORIZED") return "status-authorized";
     if (status === "FAILED") return "status-failed";

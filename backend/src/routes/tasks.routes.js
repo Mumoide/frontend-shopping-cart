@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const verifyJWT = require('../middleware/verifyJWT');
+const conditionalJWT = require('../middleware/conditionalJWT');
 const webpayController = require('../controllers/webpayController');
 const WebpayPlus = require('transbank-sdk').WebpayPlus;
 require('dotenv').config();
@@ -33,7 +34,7 @@ router.use((req, res, next) => {
     next();
 });
 
-router.post("/create_transaction", verifyJWT, webpayController.create);
+router.post("/create_transaction", conditionalJWT, webpayController.create);
 router.post("/commit_transaction", webpayController.commit);
 router.get("/commit_transaction", webpayController.commit);
 router.post("/status", verifyJWT, webpayController.status);
@@ -271,7 +272,7 @@ router.get('/cart_items/:cartId', async (req, res) => {
         const { cartId } = req.params;
         console.log('Fetching items for cartId:', cartId);
         const result = await pool.query(
-            'SELECT * FROM cart_items WHERE cart_id = $1',
+            'SELECT * FROM cart_items WHERE cart_id = $1 AND active = 1',
             [cartId]
         );
         if (result.rows.length === 0) {
