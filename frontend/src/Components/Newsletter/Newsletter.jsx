@@ -16,7 +16,7 @@ const Newsletter = () => {
     e.preventDefault();
     if (validateEmail(email)) {
       try {
-        const response = await fetch("http://localhost:3001//subscribe", {
+        const response = await fetch("http://localhost:3001/subscribe", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
