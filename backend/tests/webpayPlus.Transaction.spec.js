@@ -71,10 +71,10 @@ describe('POST /create_transaction', () => {
         });
 
         expect(createMock).toHaveBeenCalledWith(
-            expect.any(String), // definitiveOrderId
+            'order-123', // definitiveOrderId
             expect.any(String), // sessionId
-            expect.any(Number), // newTotal
-            expect.any(String)  // returnUrl
+            900, // newTotal
+            'http://localhost:3000/payment-confirmation'  // returnUrl
         );
     });
 

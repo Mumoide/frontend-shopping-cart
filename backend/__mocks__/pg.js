@@ -26,9 +26,6 @@ class MockPool {
             if (query.includes('SELECT price FROM products WHERE product_id = $1')) {
                 return Promise.resolve({ rows: [{ price: 1000 }] });
             }
-            if (query.includes('WITH sc AS')) { // Handles the query used in validatePrices
-                return Promise.resolve({ rows: [{ sum: '1000' }] });
-            }
             return Promise.resolve({ rows: [] });
         });
     }
