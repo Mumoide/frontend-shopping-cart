@@ -33,8 +33,8 @@ const Newsletter = () => {
         console.error("Login error:", error);
         Swal.fire({
           icon: "error",
-          title: "Login Failed",
-          text: error.message || "An error occurred during login.",
+          title: "Correo ya registrado.",
+          text: error.message || "Error desconocido.",
         });
       }
       setEmail("");

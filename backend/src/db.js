@@ -13,9 +13,12 @@ const pool = new Pool({
 });
 
 (async () => {
-    console.log(process.env.USER);
-    await pool.query("SELECT NOW()");
-    console.log("Conection to DB worked");
+    try {
+        await pool.query("SELECT NOW()");
+        console.log("Connection to DB worked");
+    } catch (error) {
+        console.error("Error connecting to the database:", error.message);
+    }
 })();
 
 module.exports = pool;

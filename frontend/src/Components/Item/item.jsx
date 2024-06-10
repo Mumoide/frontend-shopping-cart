@@ -11,9 +11,7 @@ const Item = ({ id, name, image, new_price, old_price }) => {
   useEffect(() => {
     const fetchUSPrice = async () => {
       try {
-        const response = await fetch(
-          `https://api.cmfchile.cl/api-sbifv3/recursos_api/dolar/2024?apikey=${apiKey}&formato=json`
-        );
+        const response = await fetch("http://localhost:3001/dollar-price");
         const data = await response.json();
         setDollarListPrice(data);
       } catch (error) {
