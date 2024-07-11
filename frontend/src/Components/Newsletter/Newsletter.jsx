@@ -16,7 +16,7 @@ const Newsletter = () => {
     e.preventDefault();
     if (validateEmail(email)) {
       try {
-        const response = await fetch("http://localhost:3001//subscribe", {
+        const response = await fetch("http://localhost:3001/subscribe", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -33,8 +33,8 @@ const Newsletter = () => {
         console.error("Login error:", error);
         Swal.fire({
           icon: "error",
-          title: "Login Failed",
-          text: error.message || "An error occurred during login.",
+          title: "Correo ya registrado.",
+          text: error.message || "Error desconocido.",
         });
       }
       setEmail("");

@@ -194,11 +194,13 @@
 .discount-message {
   font-size: 16px;
   font-weight: 600;
-  color: #4caf50;
+  /* color: #4caf50; */
   background: #e8f5e9;
   padding: 10px;
   border-radius: 5px;
   text-align: center;
+  color: green;
+  font-weight: bold;
 }
 
 .cartitems-total-item {
@@ -238,4 +240,23 @@
 
 .btn-card:hover {
   background: #cf3b3b;
+}
+
+/* CartItems.css */
+.bank-details {
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  text-align: center;
+  max-height: 0;
+  overflow: hidden;
+  visibility: hidden; /* Initially hidden */
+  transition: max-height 0.5s ease-out, padding 0.5s ease-out, visibility 0.5s;
+}
+
+.bank-details.open {
+  max-height: 300px;
+  padding: 10px;
+  visibility: visible;
 }

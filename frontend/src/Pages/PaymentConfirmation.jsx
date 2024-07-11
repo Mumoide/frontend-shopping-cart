@@ -10,8 +10,11 @@ const PaymentConfirmation = () => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token_ws");
     console.log("Token from params:", token);
+    const TBK_TOKEN = params.get("TBK_TOKEN");
+    console.log("TBK_TOKEN from params:", TBK_TOKEN);
 
     const confirmPayment = async () => {
+      console.log("confirmando pago");
       try {
         const response = await fetch(
           "http://localhost:3001/commit_transaction",
@@ -31,13 +34,40 @@ const PaymentConfirmation = () => {
       }
     };
 
-    if (token) {
+    const cancelPayment = async () => {
+      console.log("cancelando pago");
+      try {
+        const response = await fetch(
+          "http://localhost:3001/commit_transaction",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ TBK_TOKEN: TBK_TOKEN }),
+          }
+        );
+
+        const data = await response.json();
+        setStatus(data);
+      } catch (error) {
+        console.error("Error confirming payment:", error);
+      }
+    };
+
+    if (token && !TBK_TOKEN) {
       confirmPayment();
+    } else if (!token && TBK_TOKEN) {
+      cancelPayment();
     }
   }, [location]);
 
   if (!status) {
     return <div className="payment-confirmation-loading">Cargando...</div>;
+  }
+
+  if (status.viewData) {
+    localStorage.removeItem("cartItems");
   }
 
   const getStatusClass = (status) => {

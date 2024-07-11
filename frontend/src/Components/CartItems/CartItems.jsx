@@ -10,6 +10,7 @@ const CartItems = () => {
   const [productsEdited, setProductsEdited] = useState([]);
   const [isUserLogged, setIsUserLogged] = useState(false);
   const storedUserId = localStorage.getItem("userId");
+  const [showBankDetails, setShowBankDetails] = useState(false);
 
   useEffect(() => {
     if (storedUserId) {
@@ -75,6 +76,10 @@ const CartItems = () => {
     } catch (error) {
       console.error("Error initiating transaction:", error);
     }
+  };
+
+  const toggleBankDetails = () => {
+    setShowBankDetails(!showBankDetails);
   };
 
   return (
@@ -146,7 +151,17 @@ const CartItems = () => {
               <h3>{`$${total.toFixed(2)}`}</h3>
             </div>
           </div>
-          <button className="btn-transfer">Pagar con transferencia</button>
+          <button className="btn-transfer" onClick={toggleBankDetails}>
+            Pagar con transferencia
+          </button>
+          <div className={`bank-details ${showBankDetails ? "open" : ""}`}>
+            <p>Nombre: Ferramas SA</p>
+            <p>RUT: 70133769-4</p>
+            <p>Banco: Banco Internacional</p>
+            <p>Tipo de cuenta: Corriente</p>
+            <p>Nro de cuenta: 00018123741</p>
+            <p>Correo: ferramasduoc@gmail.com</p>
+          </div>
           <button className="btn-card" onClick={handlePayment}>
             Pagar con tarjeta
           </button>

@@ -5,8 +5,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const verifyJWT = require('../middleware/verifyJWT');
+const conditionalJWT = require('../middleware/conditionalJWT');
 const webpayController = require('../controllers/webpayController');
 const WebpayPlus = require('transbank-sdk').WebpayPlus;
+const currencyController = require('../controllers/currencyController');
 require('dotenv').config();
 
 // Enhanced error logging
@@ -33,11 +35,14 @@ router.use((req, res, next) => {
     next();
 });
 
-router.post("/create_transaction", verifyJWT, webpayController.create);
+router.post("/create_transaction", conditionalJWT, webpayController.create);
 router.post("/commit_transaction", webpayController.commit);
 router.get("/commit_transaction", webpayController.commit);
 router.post("/status", verifyJWT, webpayController.status);
 router.post("/refund", verifyJWT, webpayController.refund);
+
+// Fetch dollar price
+router.get('/dollar-price', currencyController.getDollarPrice);
 
 // Fetch all products
 router.get('/products', async (req, res) => {
@@ -46,7 +51,7 @@ router.get('/products', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ message: "Products not found." });
         }
-        res.json(result.rows);
+        res.status(200).json(result.rows);
     } catch (err) {
         console.error('Error fetching products:', err.message);
         res.status(500).json({ message: "Server error" });
@@ -271,7 +276,7 @@ router.get('/cart_items/:cartId', async (req, res) => {
         const { cartId } = req.params;
         console.log('Fetching items for cartId:', cartId);
         const result = await pool.query(
-            'SELECT * FROM cart_items WHERE cart_id = $1',
+            'SELECT * FROM cart_items WHERE cart_id = $1 AND active = 1',
             [cartId]
         );
         if (result.rows.length === 0) {

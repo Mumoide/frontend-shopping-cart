@@ -24,6 +24,7 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("firstName");
     localStorage.removeItem("lastName");
     localStorage.removeItem("userId");
+    localStorage.removeItem("cartItems");
     setUser(null);
     setUserId(null);
     navigate("/login");
