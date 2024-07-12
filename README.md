@@ -7,13 +7,12 @@ Este repositorio contiene el código del proyecto desarrollado durante el transc
 Ferramas Cart Shop es una aplicación web diseñada para digitalizar el proceso de ventas de una tienda de ferretería. La aplicación permite a los clientes navegar por productos, agregar artículos a un carrito de compras, y realizar pagos en línea con Webpay Plus.
 
 ## Tabla de contenidos
-  - [Aplicación](#App)
   - [Lenguajes](#Lenguajes)
   - [Tecnología](#Tecnología)
-  - [Base de datos](#DB)
+  - [Base de datos](#Base_de_datos)
   - [Arquitectura](#Arquitectura)
   - [Framework](#Framework)
-  - [Pasos de implementación](#Pasos_implementacion)
+  - [Pasos de implementación](#Pasos_de_implementación)
 
 ## Lenguajes
 
@@ -59,7 +58,7 @@ El proyecto utiliza los siguientes lenguajes de programación:
 - **Fetch-mock**: Mocking de fetch para pruebas.
 - **Nodemon**: Herramienta para reiniciar automáticamente el servidor.
 
-## Base de datos
+## Base_de_datos
 
 El proyecto utiliza PostgreSQL como sistema de gestión de bases de datos relacional. A continuación se describe su estructura de tablas y relaciones:
 
@@ -163,7 +162,7 @@ React es una biblioteca de JavaScript desarrollada por Facebook, utilizada para 
 ### Backend - Express
 Express es un framework para Node.js, diseñado para construir aplicaciones web y APIs de manera sencilla y eficiente. Proporciona características para la gestión de solicitudes HTTP, middleware y enrutamiento, lo que permite el desarrollo de servidores y servicios web escalables y mantenibles. Express es altamente flexible y se integra bien con otros módulos y bibliotecas de Node.js.
 
-## Pasos de implementación
+## Pasos_de_implementación
 
 ### Configuración de la Base de Datos
 1. Configura PostgreSQL y crea una base de datos para el proyecto.
