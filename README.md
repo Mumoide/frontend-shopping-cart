@@ -4,8 +4,6 @@
 
 Este repositorio contiene el código del proyecto desarrollado durante el transcurso de la asignatura "Integración de plataformas" de Duoc UC.
 
-Ferramas Cart Shop es una aplicación web diseñada para digitalizar el proceso de ventas de una tienda de ferretería. La aplicación permite a los clientes navegar por productos, agregar artículos a un carrito de compras, y realizar pagos en línea con Webpay Plus.
-
 ## Tabla de contenidos
   - [Lenguajes](#Lenguajes)
   - [Tecnología](#Tecnología)
@@ -13,6 +11,44 @@ Ferramas Cart Shop es una aplicación web diseñada para digitalizar el proceso 
   - [Arquitectura](#Arquitectura)
   - [Framework](#Framework)
   - [Pasos de implementación](#Pasos_de_implementación)
+
+## Aplicación
+
+Ferramas Cart Shop es una aplicación web diseñada para digitalizar el proceso de ventas de una tienda de ferretería. La aplicación permite a los clientes navegar por una tienda virtual, seleccionar productos y agregarlos a un carrito de compras, y realizar pagos en línea con Webpay Plus.
+
+A continuación se mostrarán imagenes de la aplicación:
+
+<h2>Página de inicio:</h2>
+
+<img src="frontend/src/Components/Assets/Página_de_inicio.png" height="500">
+
+<h2>Login:</h2>
+
+Vista del login:
+<img src="frontend/src/Components/Assets/Login.png" height="500">
+
+Notificación después de haber inicado sesión:
+<img src="frontend/src/Components/Assets/Login2.png" height="500">
+
+Redirección a página de inicio con el nombre del usuario en el navbar, el carrito de compras se actualiza con los productos que el usuario haya agregado previamente:
+<img src="frontend/src/Components/Assets/Login3.png" height="500">
+
+<h2>Productos:</h2>
+
+Vista de productos, se seleccionó "materiales de construcción" como ejemplo:
+<img src="frontend/src/Components/Assets/productos_ejemplo.png" height="500">
+
+<h2>Carrito de compras:</h2>
+
+Vista del carrito de compras:
+<img src="frontend/src/Components/Assets/Carrito_de_compras.png" height="500">
+
+Pago redireccionado a Webpay Plus:
+<img src="frontend/src/Components/Assets/Pago_iniciado.png" height="500">
+
+Respuesta autorizada del pago de Webpay Plus:
+<img src="frontend/src/Components/Assets/Pago_finalizado.png" height="500">
+
 
 ## Lenguajes
 
