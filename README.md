@@ -5,6 +5,7 @@
 Este repositorio contiene el código del proyecto desarrollado durante el transcurso de la asignatura "Integración de plataformas" de Duoc UC.
 
 ## Tabla de contenidos
+  - [Aplicación](#Aplicación)
   - [Lenguajes](#Lenguajes)
   - [Tecnología](#Tecnología)
   - [Base de datos](#Base_de_datos)
